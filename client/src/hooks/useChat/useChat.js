@@ -17,18 +17,18 @@ import { connect, StringCodec } from "nats.ws";
 // Our types
 /**
  * @typedef {{
-*  alias: string
-* }} User
-*/
+ *  alias: string
+ * }} User
+ */
 
 /**
-* @typedef {{
-*  id: UniqueID
-*  author: User
-*  body: string
-*  createdAt: DateTime
-* }} ChatMessage
-*/
+ * @typedef {{
+ *  id: UniqueID
+ *  author: User
+ *  body: string
+ *  createdAt: DateTime
+ * }} ChatMessage
+ */
 
 /**
  * @typedef {{
@@ -42,7 +42,7 @@ import { connect, StringCodec } from "nats.ws";
 // NATS messages are byte arrays so we need a way to decode
 // recieved messages and encode messages we want to send
 // NATS includes a String Codec for this purpose
-const natsCodec = StringCodec()
+const natsCodec = StringCodec();
 
 /**
  * Tries connecting to a NATS server
@@ -54,7 +54,7 @@ async function connectToNatsServer(handleConnection, handleError) {
   try {
     const connection = await connect({
       servers: "ws://172.17.0.3:9090",
-      tls: null
+      tls: null,
     });
     handleConnection(connection);
   } catch (error) {
@@ -70,21 +70,19 @@ async function connectToNatsServer(handleConnection, handleError) {
  * @param {() => void} addMessage
  */
 function handleNewMessage(error, message, addMessage) {
-  const newMessage = JSON.parse(natsCodec.decode(message.data))
+  const newMessage = JSON.parse(natsCodec.decode(message.data));
 
   if (error !== null) {
     console.log("Error: ", error);
-    return
-  };
-  
-  addMessage(
-    (currentMessages) => [...currentMessages, newMessage]
-  )
+    return;
+  }
+
+  addMessage((currentMessages) => [...currentMessages, newMessage]);
 }
 
 /**
  * Formats Messages into Uint8Arrays
- * 
+ *
  * @param {string} message
  * @param {string} alias
  */
@@ -92,15 +90,15 @@ function formatMessage(message, alias) {
   const messageString = JSON.stringify({
     id: `${new Date().toISOString()} ${alias}`,
     body: message,
-    author: {alias},
-  })
+    author: { alias },
+  });
 
-  return natsCodec.encode(messageString)
+  return natsCodec.encode(messageString);
 }
 
 /**
  * Returns a set of interactions and the state of a ChatRoom
- * 
+ *
  * @param {{
  *  room: string
  *  alias: string
@@ -112,26 +110,30 @@ function formatMessage(message, alias) {
  *  error: any | null
  * }}
  */
-export function useChat({room, alias}) {
+export function useChat({ room, alias }) {
   // React hooks
   const [connection, setConnection] = useState(null);
   const [error, setError] = useState(null);
   const [postMessage, setPostMessage] = useState(null);
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if(connection !== null || error !== null) return
+    if (connection !== null || error !== null) return;
 
     connectToNatsServer(
       (connection) => {
         setConnection(connection);
-        connection.subscribe(">", { callback: (error, message) => handleNewMessage(error, message, setMessages) });
+        connection.subscribe(">", {
+          callback: (error, message) =>
+            handleNewMessage(error, message, setMessages),
+        });
 
         // Since we want to store a function in useState,
         // We have to wrap that inside another function
         setPostMessage(
-          () => (message) => connection.publish(room, formatMessage(message, alias))
-        )
+          () => (message) =>
+            connection.publish(room, formatMessage(message, alias))
+        );
       },
       (error) => setError(error)
     );
@@ -139,8 +141,7 @@ export function useChat({room, alias}) {
     // When this chatroom gets unmounted disconnect from the server
     return () => {
       if (connection !== null) {
-        connection.close()
-          .catch(error => console.error(error))
+        connection.close().catch((error) => console.error(error));
       }
     };
   }, [room, alias]);

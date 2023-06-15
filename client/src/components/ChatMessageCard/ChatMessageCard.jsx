@@ -18,7 +18,6 @@ export function ChatMessageCard({ message }) {
   );
 }
 
-
 // Utility function
 
 /**
@@ -28,9 +27,9 @@ export function ChatMessageCard({ message }) {
 /**
  * Formats UTC time number to
  * String
- * @param {utcNumber} utcTime 
+ * @param {utcNumber} utcTime
  * @returns {utcString}
  */
 function format(utcTime) {
-  return new Date(utcTime).toUTCString()
+  return new Date(utcTime).toUTCString();
 }

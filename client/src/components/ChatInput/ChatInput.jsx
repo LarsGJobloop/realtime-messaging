@@ -15,8 +15,8 @@ export function ChatInput({ postMessage }) {
   function submitMessage(event) {
     event.preventDefault();
 
-    if(message === "") {
-      return
+    if (message === "") {
+      return;
     }
 
     postMessage(message);
