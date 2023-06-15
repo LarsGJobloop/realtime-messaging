@@ -67,6 +67,7 @@ function handleNewMessage(error, message, addMessage) {
 }
 
 /**
+ * Formats messages into Message model JSON strings
  * 
  * @param {string} message
  * @param {string} alias
