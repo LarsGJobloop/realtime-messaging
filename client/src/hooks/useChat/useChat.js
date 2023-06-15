@@ -50,27 +50,37 @@ async function connectToNatsServer(handleConnection, handleError) {
  *
  * @param {NatsError} error
  * @param {NatsMessage} message
+ * @param {() => void} addMessage
  */
-function handleNewMessage(error, message) {
+function handleNewMessage(error, message, addMessage) {
   console.log("Message: ", natsCodec.decode(message.data));
-  if (error) console.log("Error: ", error);
+  const newMessage = JSON.parse(natsCodec.decode(message.data))
+
+  if (error !== null) {
+    console.log("Error: ", error);
+    return
+  };
+  
+  addMessage(
+    (currentMessages) => [...currentMessages, newMessage]
+  )
 }
 
 /**
  * 
  * @param {string} message
- * @param {string} author
+ * @param {string} alias
  */
-function formatMessage(message, author) {
+function formatMessage(message, alias) {
   return JSON.stringify({
-    id: `${new Date().toISOString()} ${author}`,
+    id: `${new Date().toISOString()} ${alias}`,
     body: message,
-    author: author,
+    author: {alias},
   })
 }
 
 /**
- * Returns a set of interactions and state of a ChatRoom Connection
+ * Returns a set of interactions and the state of a ChatRoom
  * 
  * @param {{
  *  room: string
@@ -88,8 +98,7 @@ export function useChat({room, alias}) {
   const [connection, setConnection] = useState(null);
   const [error, setError] = useState(null);
   const [postMessage, setPostMessage] = useState(null);
-
-  const messages = mockMessages;
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
     if(connection !== null || error !== null) return
@@ -97,7 +106,7 @@ export function useChat({room, alias}) {
     connectToNatsServer(
       (connection) => {
         setConnection(connection);
-        connection.subscribe(">", { callback: handleNewMessage });
+        connection.subscribe(">", { callback: (error, message) => handleNewMessage(error, message, setMessages) });
 
         // Since we want to store a function in useState,
         // We have to wrap that inside another function
@@ -107,6 +116,8 @@ export function useChat({room, alias}) {
       },
       (error) => setError(error)
     );
+
+    // When this hook gets unmounted cleanup after ourself
     return () => {
       if (connection !== null) {
         connection.close()
