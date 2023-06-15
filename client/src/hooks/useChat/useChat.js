@@ -136,7 +136,7 @@ export function useChat({room, alias}) {
       (error) => setError(error)
     );
 
-    // When this hook gets unmounted cleanup after ourself
+    // When this chatroom gets unmounted disconnect from the server
     return () => {
       if (connection !== null) {
         connection.close()
