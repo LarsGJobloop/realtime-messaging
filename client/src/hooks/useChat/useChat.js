@@ -53,7 +53,6 @@ async function connectToNatsServer(handleConnection, handleError) {
  * @param {() => void} addMessage
  */
 function handleNewMessage(error, message, addMessage) {
-  console.log("Message: ", natsCodec.decode(message.data));
   const newMessage = JSON.parse(natsCodec.decode(message.data))
 
   if (error !== null) {
