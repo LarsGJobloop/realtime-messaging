@@ -10,7 +10,7 @@ function App() {
       <MenuBar />
 
       <main>
-        <Chat />
+        <Chat userAlias="Lars G" />
       </main>
     </div>
   )

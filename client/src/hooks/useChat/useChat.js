@@ -57,9 +57,25 @@ function handleNewMessage(error, message) {
 }
 
 /**
+ * 
+ * @param {string} message
+ * @param {string} author
+ */
+function formatMessage(message, author) {
+  return JSON.stringify({
+    id: `${new Date().toISOString()} ${author}`,
+    body: message,
+    author: author,
+  })
+}
+
+/**
  * Returns a set of interactions and state of a ChatRoom Connection
  * 
- * @param {string} room 
+ * @param {{
+ *  room: string
+ *  alias: string
+ * }} options
  * @returns {{
  *  connected: boolean
  *  messages: ChatMessage[]
@@ -67,7 +83,7 @@ function handleNewMessage(error, message) {
  *  error: any | null
  * }}
  */
-export function useChat(room) {
+export function useChat({room, alias}) {
   // React hooks
   const [connection, setConnection] = useState(null);
   const [error, setError] = useState(null);
@@ -86,7 +102,7 @@ export function useChat(room) {
         // Since we want to store a function in useState,
         // We have to wrap that inside another function
         setPostMessage(
-          () => (message) => connection.publish(room, natsCodec.encode(message))
+          () => (message) => connection.publish(room, natsCodec.encode(formatMessage(message, alias)))
         )
       },
       (error) => setError(error)
@@ -97,7 +113,7 @@ export function useChat(room) {
           .catch(error => console.error(error))
       }
     };
-  }, [room]);
+  }, [room, alias]);
 
   // Derived State
   const connected = connection ? true : false;
