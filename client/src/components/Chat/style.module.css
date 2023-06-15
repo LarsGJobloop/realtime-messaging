@@ -1,0 +1,11 @@
+.Chat {
+  background-color: chartreuse;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.Chat > *:nth-child(1) {
+  flex-grow: 1;
+}
