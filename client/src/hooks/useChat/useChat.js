@@ -1,5 +1,3 @@
-import { mockMessages } from "./mockMessages";
-
 import { useEffect, useState } from "react";
 import { connect, StringCodec } from "nats.ws";
 
@@ -16,10 +14,29 @@ import { connect, StringCodec } from "nats.ws";
  * @typedef {import("nats.ws").Msg} NatsMessage
  */
 
+// Our types
 /**
- * TODO: Find out how to properly import type definition in JSDoc
- * 
- * @typedef {import("./mockMessages").ChatMessage} ChatMessage
+ * @typedef {{
+*  alias: string
+* }} User
+*/
+
+/**
+* @typedef {{
+*  id: UniqueID
+*  author: User
+*  body: string
+*  createdAt: DateTime
+* }} ChatMessage
+*/
+
+/**
+ * @typedef {{
+ *  id: string
+ *  author: {alias: string},
+ *  body: string,
+ *  createdAt: UTCString,
+ * }} ChatMessage
  */
 
 // NATS messages are byte arrays so we need a way to decode

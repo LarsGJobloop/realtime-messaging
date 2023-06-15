@@ -2,7 +2,7 @@ import { ChatMessageCard } from "../ChatMessageCard/ChatMessageCard";
 import style from "./style.module.css";
 
 /**
- *
+ *TODO: Figure out how to import type definition in JSDoc correctly
  * @param {{
  *  feed: import("../../hooks/useChat/useChat").ChatMessage[]
  * }} props
