@@ -5,10 +5,20 @@ import { ChatInput } from "../ChatInput/ChatInput";
 import { useChat } from "../../hooks/useChat/useChat";
 
 export function Chat() {
-  const { messages, postMessage } = useChat("commonRoom");
+  const { messages, postMessage, connected } = useChat("commonRoom");
 
   return (
     <div className={style["Chat"]}>
+      <header>
+        <h1>
+          {
+            connected
+            ? "👍"
+            : "👎"
+          }
+        </h1>
+      </header>
+
       <ChatFeed feed={messages} />
       <ChatInput onPostMessage={postMessage} />
     </div>

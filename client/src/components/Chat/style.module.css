@@ -6,6 +6,6 @@
   height: 100%;
 }
 
-.Chat > *:nth-child(1) {
+.Chat > *:nth-child(2) {
   flex-grow: 1;
 }
