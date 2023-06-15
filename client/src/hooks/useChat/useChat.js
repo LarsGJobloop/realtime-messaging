@@ -83,17 +83,19 @@ function handleNewMessage(error, message, addMessage) {
 }
 
 /**
- * Formats messages into Message model JSON strings
+ * Formats Messages into Uint8Arrays
  * 
  * @param {string} message
  * @param {string} alias
  */
 function formatMessage(message, alias) {
-  return JSON.stringify({
+  const messageString = JSON.stringify({
     id: `${new Date().toISOString()} ${alias}`,
     body: message,
     author: {alias},
   })
+
+  return natsCodec.encode(messageString)
 }
 
 /**
@@ -128,7 +130,7 @@ export function useChat({room, alias}) {
         // Since we want to store a function in useState,
         // We have to wrap that inside another function
         setPostMessage(
-          () => (message) => connection.publish(room, natsCodec.encode(formatMessage(message, alias)))
+          () => (message) => connection.publish(room, formatMessage(message, alias))
         )
       },
       (error) => setError(error)
