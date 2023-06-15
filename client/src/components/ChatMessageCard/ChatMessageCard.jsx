@@ -15,3 +15,20 @@ export function ChatMessageCard({ author, body, createdAt }) {
     </div>
   );
 }
+
+
+// Utility function
+
+/**
+ * @typedef {number} utcNumber
+ */
+
+/**
+ * Formats UTC time number to
+ * String
+ * @param {utcNumber} utcTime 
+ * @returns {utcString}
+ */
+function format(utcTime) {
+  return new Date(utcTime).toUTCString()
+}
