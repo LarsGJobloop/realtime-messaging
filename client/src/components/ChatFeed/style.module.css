@@ -1,3 +1,11 @@
 .ChatFeed {
   background-color: blueviolet;
+
+  padding: 1rem 2rem;
+}
+
+.ChatFeed > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }

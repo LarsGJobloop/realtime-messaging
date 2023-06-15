@@ -1,3 +1,11 @@
 .ChatMessageCard {
   background-color: cornflowerblue;
+
+  border-radius: 5px;
+  padding: .2rem .7rem;
+}
+
+.ChatMessageCard > div {
+  display: flex;
+  justify-content: space-between;
 }
