@@ -1,7 +1,6 @@
 import style from "./style.module.css";
 
 /**
- *
  * @param {import("../../hooks/useChat/useChat").ChatMessage} props
  * @returns
  */
@@ -9,10 +8,10 @@ export function ChatMessageCard({ author, body, createdAt }) {
   return (
     <div className={style["ChatMessageCard"]}>
       <div>
-        <span>{chatMessage.author.alias}</span>
-        <span>{chatMessage.createdAt}</span>
+        <span>{author.alias}</span>
+        <span>{createdAt}</span>
       </div>
-      <p>{chatMessage.body}</p>
+      <p>{body}</p>
     </div>
   );
 }
