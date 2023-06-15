@@ -8,4 +8,6 @@
 .ChatMessageCard > div {
   display: flex;
   justify-content: space-between;
+
+  font-size: x-small;
 }
