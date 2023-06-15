@@ -1,3 +1,4 @@
+import { ChatMessageCard } from "../ChatMessageCard/ChatMessageCard";
 import style from "./style.module.css";
 
 
@@ -20,15 +21,7 @@ export function ChatFeed({
             (chatMessage) => {
               return (
                 <li key={chatMessage.id}>
-                  <div>
-                    <div>
-                      <span>{chatMessage.author.alias}</span>
-                      <span>{chatMessage.createdAt}</span>
-                    </div>
-                    <p>
-                      {chatMessage.body}
-                    </p>
-                  </div>
+                  <ChatMessageCard {...chatMessage} />
                 </li>
               )
             }
