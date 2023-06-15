@@ -21,7 +21,7 @@ export function ChatFeed({
             (chatMessage) => {
               return (
                 <li key={chatMessage.id}>
-                  <ChatMessageCard {...chatMessage} />
+                  <ChatMessageCard message={chatMessage} />
                 </li>
               )
             }
