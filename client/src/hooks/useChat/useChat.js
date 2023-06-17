@@ -28,7 +28,7 @@ import messageBrooker from '../../utils/messageBrooker'
  *  isConnected: boolean
  *  messages: ChatMessage[]
  *  postMessage: ((message: string) => void) | null
- *  error: any | null
+ *  error: {message: string, error: any} | null
  * }}
  */
 export function useChat({ room, alias }) {
@@ -93,7 +93,7 @@ function decodeMessage(message) {
  * - the status of the connection
  * 
  * @param {(message: string) => void} onNewMessage  
- * @param {*} setError 
+ * @param {(message: string, error: any) => void} errorHandler 
  * @param {string} room 
  * @param {string} alias 
  * @param {(message: string) => void} sendMessage 
@@ -104,7 +104,7 @@ function decodeMessage(message) {
  *  connectionStatus: boolean
  * }}
  */
-function simplifiedConnect(onNewMessage, sendMessage, room, alias, setError) {
+function simplifiedConnect(onNewMessage, sendMessage, room, alias, errorHandler) {
   let this_connection;
 
   function messageCallback(error, message) {
@@ -129,7 +129,7 @@ function simplifiedConnect(onNewMessage, sendMessage, room, alias, setError) {
         message => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
       );
     },
-    (error) => setError(error)
+    (error) => errorHandler(error)
   );
 
   return {
