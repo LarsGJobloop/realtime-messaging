@@ -49,6 +49,12 @@ export function connect(options) {
     (error) => onError(error)
   );
 
+  // Derived values
+  // TODO: gets set to early and does not update
+  // probably better to handle with a callback
+  const connectionStatus = serverConnection ? true : false
+
+  // Functions
   function messageCallback(error, message) {
     if (error !== null) {
       console.error("??? NATS error", error);
@@ -68,6 +74,6 @@ export function connect(options) {
 
   return {
     disconnect,
-    connectionStatus: serverConnection ? true : false,
+    connectionStatus,
   };
 }
