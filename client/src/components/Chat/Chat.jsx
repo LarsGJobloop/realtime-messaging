@@ -5,7 +5,7 @@ import { ChatInput } from "../ChatInput/ChatInput";
 import { useChat } from "../../hooks/useChat/useChat";
 
 export function Chat({ userAlias }) {
-  const { messages, postMessage, isConnected, error } = useChat({
+  const { messages, postMessage, isConnected } = useChat({
     room: "commonRoom",
     alias: userAlias,
   });
