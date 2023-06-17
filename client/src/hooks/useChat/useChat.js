@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import messageBrooker from '../../utils/messageBrooker'
+import messageBrooker from "../../utils/messageBrooker";
 
 // Our types
 /**
@@ -41,19 +41,17 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (isConnected || error !== null) return;
 
-    const {disconnect, connectionStatus} = simplifiedConnect(
-      {
-        errorHandler: setError,
-        onNewMessage: handleNewMessage,
-        sendMessage,
-        roomMeta: {
-          name: room,
-          userAlias: alias
-        },
-      }
-    );
+    const { disconnect, connectionStatus } = simplifiedConnect({
+      errorHandler: setError,
+      onNewMessage: handleNewMessage,
+      sendMessage,
+      roomMeta: {
+        name: room,
+        userAlias: alias,
+      },
+    });
 
-    setIsConnected(connectionStatus)
+    setIsConnected(connectionStatus);
 
     // When this chatroom gets unmounted disconnect from the server
     return () => disconnect();
@@ -64,21 +62,18 @@ export function useChat({ room, alias }) {
    * Updates messages with incomming ones
    */
   function handleNewMessage(error, message) {
-    setError(error)
-    
+    setError(error);
+
     setMessages((oldMessages) => {
-      return [
-        ...oldMessages,
-        message
-      ]
-    })
+      return [...oldMessages, message];
+    });
   }
 
   /**
    * Sets the post message function
    */
   function sendMessage(callback) {
-    setPostMessage(() => callback)
+    setPostMessage(() => callback);
   }
 
   return {
@@ -92,8 +87,8 @@ export function useChat({ room, alias }) {
 import { StringCodec } from "nats.ws";
 
 function decodeMessage(message) {
-  const codec = StringCodec()
-  return codec.decode(message)
+  const codec = StringCodec();
+  return codec.decode(message);
 }
 
 /**
@@ -108,16 +103,16 @@ function decodeMessage(message) {
 /**
  * @typedef {{
  *    name: string
-*    userAlias: string
-*  }} RoomMetaInformation
+ *    userAlias: string
+ *  }} RoomMetaInformation
  */
 
 /**
  * Handles connecting to a message brooker and
  * exposes a selction of functionality
- * 
+ *
  * @param {ChatRoomConnectionOptions} options
- * 
+ *
  * @returns {{
  *  disconnect: () => void
  *  error: any
@@ -125,24 +120,19 @@ function decodeMessage(message) {
  * }}
  */
 function simplifiedConnect(options) {
-  const {
-    errorHandler,
-    onNewMessage,
-    sendMessage,
-    roomMeta,
-  } = options
+  const { errorHandler, onNewMessage, sendMessage, roomMeta } = options;
 
   let this_connection;
 
   function messageCallback(error, message) {
-    if(error !== null) {
-      console.error("??? NATS error", error)
+    if (error !== null) {
+      console.error("??? NATS error", error);
     }
 
-    const decodedMessage = decodeMessage(message.data)
-    const parsedMessage = JSON.parse(decodedMessage)
+    const decodedMessage = decodeMessage(message.data);
+    const parsedMessage = JSON.parse(decodedMessage);
 
-    onNewMessage(error, parsedMessage)
+    onNewMessage(error, parsedMessage);
   }
 
   messageBrooker.connect(
@@ -152,19 +142,21 @@ function simplifiedConnect(options) {
         callback: messageCallback,
       });
 
-      sendMessage(
-        message => {
-          const newMessage = messageBrooker.formatMessage(message, roomMeta.userAlias)
-          this_connection.publish(roomMeta.name, newMessage)
-        }
-      );
+      sendMessage((message) => {
+        const newMessage = messageBrooker.formatMessage(
+          message,
+          roomMeta.userAlias
+        );
+        this_connection.publish(roomMeta.name, newMessage);
+      });
     },
     (error) => errorHandler(error)
   );
 
   return {
-    disconnect: () => {this_connection.close().catch((error) => console.error(error));},
+    disconnect: () => {
+      this_connection.close().catch((error) => console.error(error));
+    },
     connectionStatus: this_connection ? true : false,
-  }
+  };
 }
-
