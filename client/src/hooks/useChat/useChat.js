@@ -99,7 +99,7 @@ function decodeMessage(message) {
 function simplifiedConnect(newMessageHandler, setPostMessage, room, alias, setError) {
   let this_connection;
 
-  const messageCallback = (error, message) => {
+  function messageCallback(error, message) {
     if(error !== null) {
       console.error("??? NATS error", error)
     }
