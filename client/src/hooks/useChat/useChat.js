@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { connect, StringCodec } from "nats.ws";
 
+// ENVIRONMENT VARIABLES
+const SERVER = import.meta.env.VITE_MESSAGE_BROOKER_URL
+const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT
+
 // NATs types
 /**
  * @typedef {import("nats.ws").NatsConnection} NatsConnection
@@ -53,7 +57,7 @@ const natsCodec = StringCodec();
 async function connectToNatsServer(handleConnection, handleError) {
   try {
     const connection = await connect({
-      servers: "ws://172.17.0.3:9090",
+      servers: `${SERVER}:${PORT}`,
       tls: null,
     });
     handleConnection(connection);
