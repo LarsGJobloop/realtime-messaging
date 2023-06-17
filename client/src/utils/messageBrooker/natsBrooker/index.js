@@ -1,12 +1,7 @@
 import { connectToNatsServer } from "./connectToNatsServer"
+import { decodeMessage } from "./decodeMessage";
 import { formatMessage } from "./formatMessage"
 
-import { StringCodec } from "nats.ws";
-
-function decodeMessage(message) {
-  const codec = StringCodec();
-  return codec.decode(message);
-}
 /**
  * @typedef {{
  *  onNewMessage: (message: string) => void
