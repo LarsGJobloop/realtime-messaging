@@ -1,10 +1,13 @@
+import { encodeMessage, decodeMessage } from "./codec";
 import { connectToNatsServer } from "./connectToNatsServer";
-import { decodeMessage } from "./decodeMessage";
-import { formatMessage } from "./formatMessage";
+
+/**
+ * @typedef {import("../../../hooks/useChat/useChat").ChatMessage} ChatMessage
+ */
 
 /**
  * @typedef {{
- *  onNewMessage: (message: string, error) => void
+ *  onNewMessage: (message: ChatMessage, error) => void
  *  sendMessage: (message: string) => void
  *  onError: (message: string, error, any) => void
  *  roomMeta: RoomMetaInformation
@@ -38,11 +41,11 @@ export function connect(options) {
     (connection) => {
       serverConnection = connection;
       serverConnection.subscribe(roomMeta.name, {
-        callback: onNewMessage,
+        callback: handleIncommingMessages,
       });
 
       sendMessage((message) => {
-        const newMessage = formatMessage(message, roomMeta.userAlias);
+        const newMessage = encodeMessage(message, roomMeta.userAlias);        
         serverConnection.publish(roomMeta.name, newMessage);
       });
     },
@@ -55,16 +58,16 @@ export function connect(options) {
   const connectionStatus = serverConnection ? true : false
 
   // Functions
-  function onNewMessage(error, message) {
+  function handleIncommingMessages(error, message) {
     if (error !== null) {
       console.error("??? NATS error", error);
       onNewMessage(null, error);
     }
 
-    const decodedMessage = decodeMessage(message.data);
-    const parsedMessage = JSON.parse(decodedMessage);
+    const newMessage = decodeMessage(message.data);
+    console.log(newMessage)
 
-    onNewMessage(parsedMessage, null);
+    onNewMessage(newMessage, null);
   }
 
   function disconnect() {
