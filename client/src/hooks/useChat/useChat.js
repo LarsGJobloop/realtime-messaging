@@ -41,7 +41,7 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (isConnected || error !== null) return;
 
-    const {disconnect, connectionStatus} = simplifiedConnect(setMessages, setPostMessage, room, alias, setError);
+    const {disconnect, connectionStatus} = simplifiedConnect(handleNewMessage, setPostMessage, room, alias, setError);
 
     setIsConnected(connectionStatus)
 
@@ -52,6 +52,8 @@ export function useChat({ room, alias }) {
   // Event handlers
   function handleNewMessage(error, message) {
     setError(error)
+
+    
     setMessages((oldMessages) => {
       return [
         ...oldMessages,
@@ -77,38 +79,44 @@ function decodeMessage(message) {
 
 /**
  * Connects to a message brooker and returns:
- * - something that gets triggered by new messages
- * - way to disconnect
  * - any errors that might occur
  * - a way to post new messages
  * - the status of the connection
  * 
- * @param {*} setMessages 
+ * @param {(message: ChatMessage) => void} newMessageHandler 
  * @param {*} setPostMessage 
+ * @param {*} setError 
  * @param {string} room 
  * @param {string} alias 
- * @param {*} setError 
  * 
  * @returns {{
- *  eventCallback: (message: ChatMessage) => void
  *  disconnect: () => void
  *  error: any
  *  postmessage: (message: ChatMessage) => void
  *  connectionStatus: boolean
  * }}
  */
-function simplifiedConnect(setMessages, setPostMessage, room, alias, setError) {
+function simplifiedConnect(newMessageHandler, setPostMessage, room, alias, setError) {
   let this_connection;
+
+  const messageCallback = (error, message) => {
+    if(error !== null) {
+      console.error("??? NATS error", error)
+    }
+
+    const decodedMessage = decodeMessage(message.data)
+    const parsedMessage = JSON.parse(decodedMessage)
+
+    newMessageHandler(error, parsedMessage)
+  }
 
   messageBrooker.connect(
     (connection) => {
       this_connection = connection;
       this_connection.subscribe(">", {
-        callback: (error, message) => messageBrooker.handleNewMessage(error, message, setMessages),
+        callback: messageCallback,
       });
 
-      // Since we want to store a function in useState,
-      // We have to wrap that inside the state setter function
       setPostMessage(
         () => (message) => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
       );
