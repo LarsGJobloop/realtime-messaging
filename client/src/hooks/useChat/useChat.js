@@ -133,10 +133,9 @@ export function useChat({ room, alias }) {
         });
 
         // Since we want to store a function in useState,
-        // We have to wrap that inside another function
+        // We have to wrap that inside the state setter function
         setPostMessage(
-          () => (message) =>
-            connection.publish(room, formatMessage(message, alias))
+          () => (message) => connection.publish(room, formatMessage(message, alias))
         );
       },
       (error) => setError(error)
