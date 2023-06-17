@@ -5,7 +5,7 @@ import { ChatInput } from "../ChatInput/ChatInput";
 import { useChat } from "../../hooks/useChat/useChat";
 
 export function Chat({ userAlias }) {
-  const { messages, postMessage, connected, error } = useChat({
+  const { messages, postMessage, isConnected, error } = useChat({
     room: "commonRoom",
     alias: userAlias,
   });
@@ -14,7 +14,7 @@ export function Chat({ userAlias }) {
     <div className={style["Chat"]}>
       <header>
         <h1>
-          <span>{connected ? "👍" : "👎"}</span>
+          <span>{isConnected ? "👍" : "👎"}</span>
           as {userAlias}
         </h1>
       </header>

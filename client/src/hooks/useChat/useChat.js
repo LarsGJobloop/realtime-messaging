@@ -108,7 +108,7 @@ function formatMessage(message, alias) {
  *  alias: string
  * }} options
  * @returns {{
- *  connected: boolean
+ *  isConnected: boolean
  *  messages: ChatMessage[]
  *  postMessage: ((message: string) => void) | null
  *  error: any | null
@@ -150,10 +150,10 @@ export function useChat({ room, alias }) {
   }, [room, alias]);
 
   // Derived State
-  const connected = connection ? true : false;
+  const isConnected = connection ? true : false;
 
   return {
-    connected,
+    isConnected,
     messages,
     postMessage,
     error,
