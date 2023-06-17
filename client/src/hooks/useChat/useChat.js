@@ -47,8 +47,8 @@ export function useChat({ room, alias }) {
         onNewMessage: handleNewMessage,
         sendMessage,
         roomMeta: {
-          room,
-          alias
+          name: room,
+          userAlias: alias
         },
       }
     );
@@ -107,8 +107,8 @@ function decodeMessage(message) {
 
 /**
  * @typedef {{
- *    room: string
-*    alias: string
+ *    name: string
+*    userAlias: string
 *  }} RoomMetaInformation
  */
 
@@ -154,8 +154,8 @@ function simplifiedConnect(options) {
 
       sendMessage(
         message => {
-          const newMessage = messageBrooker.formatMessage(message, roomMeta.alias)
-          this_connection.publish(roomMeta.room, newMessage)
+          const newMessage = messageBrooker.formatMessage(message, roomMeta.userAlias)
+          this_connection.publish(roomMeta.name, newMessage)
         }
       );
     },
