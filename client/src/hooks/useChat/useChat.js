@@ -87,16 +87,13 @@ function decodeMessage(message) {
 }
 
 /**
- * Connects to a message brooker and returns:
- * - any errors that might occur
- * - a way to post new messages
- * - the status of the connection
+ * Handles connecting to a message brooker and
+ * exposes a selction of functionality
  * 
  * @param {(message: string) => void} onNewMessage  
- * @param {(message: string, error: any) => void} errorHandler 
- * @param {string} room 
- * @param {string} alias 
  * @param {(message: string) => void} sendMessage 
+ * @param {(message: string, error: any) => void} errorHandler 
+ * @param {{room: string, alias: string}} roomMeta
  * 
  * @returns {{
  *  disconnect: () => void
