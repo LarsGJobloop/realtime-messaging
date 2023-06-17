@@ -33,41 +33,21 @@ import messageBrooker from '../../utils/messageBrooker'
  */
 export function useChat({ room, alias }) {
   // React hooks
-  const [connection, setConnection] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
   const [postMessage, setPostMessage] = useState(null);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (connection !== null || error !== null) return;
+    if (isConnected || error !== null) return;
 
-    messageBrooker.connect(
-      (connection) => {
-        setConnection(connection);
-        connection.subscribe(">", {
-          callback: (error, message) =>
-            messageBrooker.handleNewMessage(error, message, setMessages),
-        });
+    const {disconnect, connectionStatus} = simplifyiedConnection(setMessages, setPostMessage, room, alias, setError);
 
-        // Since we want to store a function in useState,
-        // We have to wrap that inside the state setter function
-        setPostMessage(
-          () => (message) => connection.publish(room, messageBrooker.formatMessage(message, alias))
-        );
-      },
-      (error) => setError(error)
-    );
+    setIsConnected(connectionStatus)
 
     // When this chatroom gets unmounted disconnect from the server
-    return () => {
-      if (connection !== null) {
-        connection.close().catch((error) => console.error(error));
-      }
-    };
+    return () => disconnect();
   }, [room, alias]);
-
-  // Derived State
-  const isConnected = connection ? true : false;
 
   return {
     isConnected,
@@ -76,3 +56,51 @@ export function useChat({ room, alias }) {
     error,
   };
 }
+
+/**
+ * Connects to a message brooker and returns:
+ * - something that gets triggered by new messages
+ * - way to disconnect
+ * - any errors that might occur
+ * - a way to post new messages
+ * - the status of the connection
+ * 
+ * @param {*} setMessages 
+ * @param {*} setPostMessage 
+ * @param {string} room 
+ * @param {string} alias 
+ * @param {*} setError 
+ * 
+ * @returns {{
+ *  eventCallback: (message: ChatMessage) => void
+ *  disconnect: () => void
+ *  error: any
+ *  postmessage: (message: ChatMessage) => void
+ *  connectionStatus: boolean
+ * }}
+ */
+function simplifyiedConnection(setMessages, setPostMessage, room, alias, setError) {
+  let this_connection;
+
+  messageBrooker.connect(
+    (connection) => {
+      this_connection = connection;
+      this_connection.subscribe(">", {
+        callback: (error, message) => messageBrooker.handleNewMessage(error, message, setMessages),
+      });
+
+      // Since we want to store a function in useState,
+      // We have to wrap that inside the state setter function
+      setPostMessage(
+        () => (message) => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
+      );
+    },
+    (error) => setError(error)
+  );
+
+  return {
+    disconnect: () => {this_connection.close().catch((error) => console.error(error));},
+    connectionStatus: this_connection ? true : false
+  }
+}
+
