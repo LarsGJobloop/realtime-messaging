@@ -34,15 +34,6 @@ const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT
  * }} ChatMessage
  */
 
-/**
- * @typedef {{
- *  id: string
- *  author: {alias: string},
- *  body: string,
- *  createdAt: UTCString,
- * }} ChatMessage
- */
-
 // NATS messages are byte arrays so we need a way to decode
 // recieved messages and encode messages we want to send
 // NATS includes a String Codec for this purpose
