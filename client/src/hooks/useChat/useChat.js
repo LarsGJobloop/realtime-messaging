@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import messageBrooker from '../../utils/messageBrooker'
+import {connect as connectToMessageBrooker} from "../../utils/messageBrooker"
 
 // Our types
 /**
@@ -28,46 +28,53 @@ import messageBrooker from '../../utils/messageBrooker'
  *  isConnected: boolean
  *  messages: ChatMessage[]
  *  postMessage: ((message: string) => void) | null
- *  error: any | null
+ *  error: {message: string, error: any} | null
  * }}
  */
 export function useChat({ room, alias }) {
   // React hooks
-  const [connection, setConnection] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
   const [postMessage, setPostMessage] = useState(null);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (connection !== null || error !== null) return;
+    if (isConnected || error !== null) return;
 
-    messageBrooker.connect(
-      (connection) => {
-        setConnection(connection);
-        connection.subscribe(">", {
-          callback: (error, message) =>
-            messageBrooker.handleNewMessage(error, message, setMessages),
-        });
-
-        // Since we want to store a function in useState,
-        // We have to wrap that inside the state setter function
-        setPostMessage(
-          () => (message) => connection.publish(room, messageBrooker.formatMessage(message, alias))
-        );
+    const { disconnect, connectionStatus } = connectToMessageBrooker({
+      errorHandler: setError,
+      onNewMessage: handleNewMessage,
+      sendMessage,
+      roomMeta: {
+        name: room,
+        userAlias: alias,
       },
-      (error) => setError(error)
-    );
+    });
+
+    setIsConnected(connectionStatus);
 
     // When this chatroom gets unmounted disconnect from the server
-    return () => {
-      if (connection !== null) {
-        connection.close().catch((error) => console.error(error));
-      }
-    };
+    return () => disconnect();
   }, [room, alias]);
 
-  // Derived State
-  const isConnected = connection ? true : false;
+  // Event handlers
+  /**
+   * Updates messages with incomming ones
+   */
+  function handleNewMessage(error, message) {
+    setError(error);
+
+    setMessages((oldMessages) => {
+      return [...oldMessages, message];
+    });
+  }
+
+  /**
+   * Sets the post message function
+   */
+  function sendMessage(callback) {
+    setPostMessage(() => callback);
+  }
 
   return {
     isConnected,
