@@ -42,7 +42,7 @@ export function useChat({ room, alias }) {
     if (isConnected || error !== null) return;
 
     const { disconnect, connectionStatus } = connectToMessageBrooker({
-      errorHandler: setError,
+      onError: setError,
       onNewMessage: handleNewMessage,
       sendMessage,
       roomMeta: {

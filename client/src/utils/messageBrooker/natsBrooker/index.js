@@ -6,7 +6,7 @@ import { formatMessage } from "./formatMessage";
  * @typedef {{
  *  onNewMessage: (message: string) => void
  *  sendMessage: (message: string) => void
- *  errorHandler: (message: string, error, any) => void
+ *  onError: (message: string, error, any) => void
  *  roomMeta: RoomMetaInformation
  * }} ChatRoomConnectionOptions
  */
@@ -30,7 +30,7 @@ import { formatMessage } from "./formatMessage";
  * }}
  */
 export function connect(options) {
-  const { errorHandler, onNewMessage, sendMessage, roomMeta } = options;
+  const { onError, onNewMessage, sendMessage, roomMeta } = options;
 
   let serverConnection;
 
@@ -57,7 +57,7 @@ export function connect(options) {
         serverConnection.publish(roomMeta.name, newMessage);
       });
     },
-    (error) => errorHandler(error)
+    (error) => onError(error)
   );
 
   return {
