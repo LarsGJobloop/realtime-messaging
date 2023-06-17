@@ -4,7 +4,7 @@ import { formatMessage } from "./formatMessage";
 
 /**
  * @typedef {{
- *  onNewMessage: (message: string) => void
+ *  onNewMessage: (message: string, error) => void
  *  sendMessage: (message: string) => void
  *  onError: (message: string, error, any) => void
  *  roomMeta: RoomMetaInformation
