@@ -49,12 +49,30 @@ export function useChat({ room, alias }) {
     return () => disconnect();
   }, [room, alias]);
 
+  // Event handlers
+  function handleNewMessage(error, message) {
+    setError(error)
+    setMessages((oldMessages) => {
+      return [
+        ...oldMessages,
+        message
+      ]
+    })
+  }
+
   return {
     isConnected,
     messages,
     postMessage,
     error,
   };
+}
+
+import { StringCodec } from "nats.ws";
+
+function decodeMessage(message) {
+  const codec = StringCodec()
+  return codec.decode(message)
 }
 
 /**
