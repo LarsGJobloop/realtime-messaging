@@ -57,7 +57,7 @@ const natsCodec = StringCodec();
 async function connectToNatsServer(handleConnection, handleError) {
   try {
     const connection = await connect({
-      servers: `${SERVER}:${PORT}`,
+      servers: `ws://${SERVER}:${PORT}`,
       tls: null,
     });
     handleConnection(connection);
