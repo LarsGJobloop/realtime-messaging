@@ -38,7 +38,7 @@ export function connect(options) {
     (connection) => {
       serverConnection = connection;
       serverConnection.subscribe(roomMeta.name, {
-        callback: messageCallback,
+        callback: onNewMessage,
       });
 
       sendMessage((message) => {
@@ -55,7 +55,7 @@ export function connect(options) {
   const connectionStatus = serverConnection ? true : false
 
   // Functions
-  function messageCallback(error, message) {
+  function onNewMessage(error, message) {
     if (error !== null) {
       console.error("??? NATS error", error);
       onNewMessage(null, error);
