@@ -1,6 +1,6 @@
-import { connectToNatsServer } from "./connectToNatsServer"
-import { handleNewMessage } from "./handleNewMessage"
-import { formatMessage } from "./formatMessage"
+import { connectToNatsServer } from "./natsBrooker/connectToNatsServer"
+import { handleNewMessage } from "./natsBrooker/handleNewMessage"
+import { formatMessage } from "./natsBrooker/formatMessage"
 
 export default {
   connect: connectToNatsServer,
