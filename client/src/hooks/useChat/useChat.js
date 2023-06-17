@@ -41,7 +41,17 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (isConnected || error !== null) return;
 
-    const {disconnect, connectionStatus} = simplifiedConnect(handleNewMessage, sendMessage, room, alias, setError);
+    const {disconnect, connectionStatus} = simplifiedConnect(
+      {
+        errorHandler: setError,
+        onNewMessage: handleNewMessage,
+        sendMessage,
+        roomMeta: {
+          room,
+          alias
+        },
+      }
+    );
 
     setIsConnected(connectionStatus)
 
@@ -87,13 +97,26 @@ function decodeMessage(message) {
 }
 
 /**
+ * @typedef {{
+ *  onNewMessage: (message: string) => void
+ *  sendMessage: (message: string) => void
+ *  errorHandler: (message: string, error, any) => void
+ *  roomMeta: RoomMetaInformation
+ * }} ChatRoomConnectionOptions
+ */
+
+/**
+ * @typedef {{
+ *    room: string
+*    alias: string
+*  }} RoomMetaInformation
+ */
+
+/**
  * Handles connecting to a message brooker and
  * exposes a selction of functionality
  * 
- * @param {(message: string) => void} onNewMessage  
- * @param {(message: string) => void} sendMessage 
- * @param {(message: string, error: any) => void} errorHandler 
- * @param {{room: string, alias: string}} roomMeta
+ * @param {ChatRoomConnectionOptions} options
  * 
  * @returns {{
  *  disconnect: () => void
@@ -101,7 +124,14 @@ function decodeMessage(message) {
  *  connectionStatus: boolean
  * }}
  */
-function simplifiedConnect(onNewMessage, sendMessage, room, alias, errorHandler) {
+function simplifiedConnect(options) {
+  const {
+    errorHandler,
+    onNewMessage,
+    sendMessage,
+    roomMeta,
+  } = options
+
   let this_connection;
 
   function messageCallback(error, message) {
@@ -123,7 +153,10 @@ function simplifiedConnect(onNewMessage, sendMessage, room, alias, errorHandler)
       });
 
       sendMessage(
-        message => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
+        message => {
+          const newMessage = messageBrooker.formatMessage(message, roomMeta.alias)
+          this_connection.publish(roomMeta.room, newMessage)
+        }
       );
     },
     (error) => errorHandler(error)
