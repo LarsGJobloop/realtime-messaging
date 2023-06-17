@@ -91,7 +91,7 @@ function decodeMessage(message) {
  * @param {*} setError 
  * @param {string} room 
  * @param {string} alias 
- * @param {null | (message: string) => void} sendMessage 
+ * @param {(message: string) => void} sendMessage 
  * 
  * @returns {{
  *  disconnect: () => void
