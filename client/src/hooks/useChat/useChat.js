@@ -61,8 +61,11 @@ export function useChat({ room, alias }) {
   /**
    * Updates messages with incomming ones
    */
-  function handleNewMessage(error, message) {
-    setError(error);
+  function handleNewMessage(message, error) {
+    if (error !== null) {
+      setError(error);
+      return
+    }
 
     setMessages((oldMessages) => {
       return [...oldMessages, message];

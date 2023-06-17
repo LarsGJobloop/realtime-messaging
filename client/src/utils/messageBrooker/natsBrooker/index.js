@@ -37,12 +37,13 @@ export function connect(options) {
   function messageCallback(error, message) {
     if (error !== null) {
       console.error("??? NATS error", error);
+      onNewMessage(null, error);
     }
 
     const decodedMessage = decodeMessage(message.data);
     const parsedMessage = JSON.parse(decodedMessage);
 
-    onNewMessage(error, parsedMessage);
+    onNewMessage(parsedMessage, null);
   }
 
   connectToNatsServer(
