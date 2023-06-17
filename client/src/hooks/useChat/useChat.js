@@ -87,7 +87,7 @@ function decodeMessage(message) {
  * - a way to post new messages
  * - the status of the connection
  * 
- * @param {(message: string) => void} newMessageHandler  
+ * @param {(message: string) => void} onNewMessage  
  * @param {*} setError 
  * @param {string} room 
  * @param {string} alias 
@@ -99,7 +99,7 @@ function decodeMessage(message) {
  *  connectionStatus: boolean
  * }}
  */
-function simplifiedConnect(newMessageHandler, sendMessage, room, alias, setError) {
+function simplifiedConnect(onNewMessage, sendMessage, room, alias, setError) {
   let this_connection;
 
   function messageCallback(error, message) {
@@ -110,7 +110,7 @@ function simplifiedConnect(newMessageHandler, sendMessage, room, alias, setError
     const decodedMessage = decodeMessage(message.data)
     const parsedMessage = JSON.parse(decodedMessage)
 
-    newMessageHandler(error, parsedMessage)
+    onNewMessage(error, parsedMessage)
   }
 
   messageBrooker.connect(
