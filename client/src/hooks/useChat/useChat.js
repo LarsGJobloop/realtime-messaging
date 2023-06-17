@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {connect as connectToMessageBrooker} from "../../utils/messageBrooker"
+import { connect as connectToMessageBrooker } from "../../utils/messageBrooker";
 
 // Our types
 /**

@@ -1,8 +1,8 @@
 import { connect } from "nats.ws";
 
 // ENVIRONMENT VARIABLES
-const SERVER = import.meta.env.VITE_MESSAGE_BROOKER_URL
-const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT
+const SERVER = import.meta.env.VITE_MESSAGE_BROOKER_URL;
+const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT;
 
 /**
  * @typedef {import("nats.ws").NatsConnection} NatsConnection

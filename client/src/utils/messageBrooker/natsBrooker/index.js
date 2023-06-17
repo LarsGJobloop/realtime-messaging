@@ -1,6 +1,6 @@
-import { connectToNatsServer } from "./connectToNatsServer"
+import { connectToNatsServer } from "./connectToNatsServer";
 import { decodeMessage } from "./decodeMessage";
-import { formatMessage } from "./formatMessage"
+import { formatMessage } from "./formatMessage";
 
 /**
  * @typedef {{
@@ -53,10 +53,7 @@ export function connect(options) {
       });
 
       sendMessage((message) => {
-        const newMessage = formatMessage(
-          message,
-          roomMeta.userAlias
-        );
+        const newMessage = formatMessage(message, roomMeta.userAlias);
         this_connection.publish(roomMeta.name, newMessage);
       });
     },

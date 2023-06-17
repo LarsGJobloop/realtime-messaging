@@ -1,1 +1,1 @@
-export { connect } from "./natsBrooker"
+export { connect } from "./natsBrooker";
