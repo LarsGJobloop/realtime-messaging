@@ -37,7 +37,7 @@ export function connect(options) {
   connectToNatsServer(
     (connection) => {
       serverConnection = connection;
-      serverConnection.subscribe(">", {
+      serverConnection.subscribe(roomMeta.name, {
         callback: messageCallback,
       });
 
