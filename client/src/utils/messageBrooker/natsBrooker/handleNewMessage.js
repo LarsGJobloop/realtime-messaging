@@ -1,5 +1,14 @@
 import { StringCodec } from "nats.ws";
 
+// NATs types
+/**
+ * @typedef {NatsError} NatsError
+ */
+
+/**
+ * @typedef {import("nats.ws").Msg} NatsMessage
+ */
+
 // NATS messages are byte arrays so we need a way to decode
 // recieved messages and encode messages we want to send
 // NATS includes a String Codec for this purpose

@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import messageBrooker from '../../utils/messageBrooker'
 
-// NATs types
-/**
- * @typedef {NatsError} NatsError
- */
-
-/**
- * @typedef {import("nats.ws").Msg} NatsMessage
- */
-
 // Our types
 /**
  * @typedef {{
