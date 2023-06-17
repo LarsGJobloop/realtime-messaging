@@ -30,25 +30,7 @@ import messageBrooker from '../../utils/messageBrooker'
 // NATS messages are byte arrays so we need a way to decode
 // recieved messages and encode messages we want to send
 // NATS includes a String Codec for this purpose
-const natsCodec = StringCodec();
-
-/**
- * Handles new messages from a NATS server
- *
- * @param {NatsError} error
- * @param {NatsMessage} message
- * @param {() => void} addMessage
- */
-function handleNewMessage(error, message, addMessage) {
-  const newMessage = JSON.parse(natsCodec.decode(message.data));
-
-  if (error !== null) {
-    console.log("Error: ", error);
-    return;
-  }
-
-  addMessage((currentMessages) => [...currentMessages, newMessage]);
-}
+export const natsCodec = StringCodec();
 
 /**
  * Formats Messages into Uint8Arrays
@@ -95,7 +77,7 @@ export function useChat({ room, alias }) {
         setConnection(connection);
         connection.subscribe(">", {
           callback: (error, message) =>
-            handleNewMessage(error, message, setMessages),
+            messageBrooker.handleNewMessage(error, message, setMessages),
         });
 
         // Since we want to store a function in useState,
