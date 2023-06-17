@@ -41,7 +41,7 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (isConnected || error !== null) return;
 
-    const {disconnect, connectionStatus} = simplifyiedConnection(setMessages, setPostMessage, room, alias, setError);
+    const {disconnect, connectionStatus} = simplifiedConnect(setMessages, setPostMessage, room, alias, setError);
 
     setIsConnected(connectionStatus)
 
@@ -79,7 +79,7 @@ export function useChat({ room, alias }) {
  *  connectionStatus: boolean
  * }}
  */
-function simplifyiedConnection(setMessages, setPostMessage, room, alias, setError) {
+function simplifiedConnect(setMessages, setPostMessage, room, alias, setError) {
   let this_connection;
 
   messageBrooker.connect(
