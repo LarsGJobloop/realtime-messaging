@@ -32,7 +32,7 @@ import { formatMessage } from "./formatMessage";
 export function connect(options) {
   const { errorHandler, onNewMessage, sendMessage, roomMeta } = options;
 
-  let this_connection;
+  let serverConnection;
 
   function messageCallback(error, message) {
     if (error !== null) {
@@ -47,14 +47,14 @@ export function connect(options) {
 
   connectToNatsServer(
     (connection) => {
-      this_connection = connection;
-      this_connection.subscribe(">", {
+      serverConnection = connection;
+      serverConnection.subscribe(">", {
         callback: messageCallback,
       });
 
       sendMessage((message) => {
         const newMessage = formatMessage(message, roomMeta.userAlias);
-        this_connection.publish(roomMeta.name, newMessage);
+        serverConnection.publish(roomMeta.name, newMessage);
       });
     },
     (error) => errorHandler(error)
@@ -62,9 +62,9 @@ export function connect(options) {
 
   return {
     disconnect: () => {
-      if (!this_connection) return
-      this_connection.close().catch((error) => console.error(error));
+      if (!serverConnection) return
+      serverConnection.close().catch((error) => console.error(error));
     },
-    connectionStatus: this_connection ? true : false,
+    connectionStatus: serverConnection ? true : false,
   };
 }
