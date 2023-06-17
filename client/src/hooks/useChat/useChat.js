@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { StringCodec } from "nats.ws";
 import messageBrooker from '../../utils/messageBrooker'
 
 // NATs types
@@ -26,27 +25,6 @@ import messageBrooker from '../../utils/messageBrooker'
  *  createdAt: DateTime
  * }} ChatMessage
  */
-
-// NATS messages are byte arrays so we need a way to decode
-// recieved messages and encode messages we want to send
-// NATS includes a String Codec for this purpose
-export const natsCodec = StringCodec();
-
-/**
- * Formats Messages into Uint8Arrays
- *
- * @param {string} message
- * @param {string} alias
- */
-function formatMessage(message, alias) {
-  const messageString = JSON.stringify({
-    id: `${new Date().toISOString()} ${alias}`,
-    body: message,
-    author: { alias },
-  });
-
-  return natsCodec.encode(messageString);
-}
 
 /**
  * Returns a set of interactions and the state of a ChatRoom
@@ -83,7 +61,7 @@ export function useChat({ room, alias }) {
         // Since we want to store a function in useState,
         // We have to wrap that inside the state setter function
         setPostMessage(
-          () => (message) => connection.publish(room, formatMessage(message, alias))
+          () => (message) => connection.publish(room, messageBrooker.formatMessage(message, alias))
         );
       },
       (error) => setError(error)
