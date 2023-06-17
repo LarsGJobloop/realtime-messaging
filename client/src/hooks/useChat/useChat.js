@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
-import { connect, StringCodec } from "nats.ws";
-
-// ENVIRONMENT VARIABLES
-const SERVER = import.meta.env.VITE_MESSAGE_BROOKER_URL
-const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT
+import { StringCodec } from "nats.ws";
+import messageBrooker from '../../utils/messageBrooker'
 
 // NATs types
-/**
- * @typedef {import("nats.ws").NatsConnection} NatsConnection
- */
-
 /**
  * @typedef {NatsError} NatsError
  */
@@ -38,24 +31,6 @@ const PORT = import.meta.env.VITE_MESSAGE_BROOKER_CLIENT_PORT
 // recieved messages and encode messages we want to send
 // NATS includes a String Codec for this purpose
 const natsCodec = StringCodec();
-
-/**
- * Tries connecting to a NATS server
- *
- * @param {(connection: NatsConnection) => void} handleConnection
- * @param {({message: string, error}) => void} handleError
- */
-async function connectToNatsServer(handleConnection, handleError) {
-  try {
-    const connection = await connect({
-      servers: `ws://${SERVER}:${PORT}`,
-      tls: null,
-    });
-    handleConnection(connection);
-  } catch (error) {
-    handleError({ message: "Error connecting", error });
-  }
-}
 
 /**
  * Handles new messages from a NATS server
@@ -115,7 +90,7 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (connection !== null || error !== null) return;
 
-    connectToNatsServer(
+    messageBrooker.connect(
       (connection) => {
         setConnection(connection);
         connection.subscribe(">", {
