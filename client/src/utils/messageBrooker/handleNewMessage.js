@@ -1,4 +1,9 @@
-import { natsCodec } from "../../hooks/useChat/useChat";
+import { StringCodec } from "nats.ws";
+
+// NATS messages are byte arrays so we need a way to decode
+// recieved messages and encode messages we want to send
+// NATS includes a String Codec for this purpose
+const natsCodec = StringCodec();
 
 /**
  * Handles new messages from a NATS server
