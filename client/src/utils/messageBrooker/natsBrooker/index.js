@@ -34,18 +34,6 @@ export function connect(options) {
 
   let serverConnection;
 
-  function messageCallback(error, message) {
-    if (error !== null) {
-      console.error("??? NATS error", error);
-      onNewMessage(null, error);
-    }
-
-    const decodedMessage = decodeMessage(message.data);
-    const parsedMessage = JSON.parse(decodedMessage);
-
-    onNewMessage(parsedMessage, null);
-  }
-
   connectToNatsServer(
     (connection) => {
       serverConnection = connection;
@@ -61,11 +49,25 @@ export function connect(options) {
     (error) => onError(error)
   );
 
+  function messageCallback(error, message) {
+    if (error !== null) {
+      console.error("??? NATS error", error);
+      onNewMessage(null, error);
+    }
+
+    const decodedMessage = decodeMessage(message.data);
+    const parsedMessage = JSON.parse(decodedMessage);
+
+    onNewMessage(parsedMessage, null);
+  }
+
+  function disconnect() {
+    if (!serverConnection) return
+    serverConnection.close().catch((error) => console.error(error));
+  }
+
   return {
-    disconnect: () => {
-      if (!serverConnection) return
-      serverConnection.close().catch((error) => console.error(error));
-    },
+    disconnect,
     connectionStatus: serverConnection ? true : false,
   };
 }
