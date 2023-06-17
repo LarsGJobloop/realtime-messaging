@@ -62,6 +62,7 @@ export function connect(options) {
 
   return {
     disconnect: () => {
+      if (!this_connection) return
       this_connection.close().catch((error) => console.error(error));
     },
     connectionStatus: this_connection ? true : false,
