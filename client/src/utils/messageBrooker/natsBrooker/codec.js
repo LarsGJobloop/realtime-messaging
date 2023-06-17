@@ -14,7 +14,7 @@ const codec = StringCodec();
  */
 export function decodeMessage(message) {
   const decoded = codec.decode(message);
-  const messageObject = JSON.stringify(decoded)
+  const messageObject = JSON.parse(decoded)
 
   return messageObject
 }
