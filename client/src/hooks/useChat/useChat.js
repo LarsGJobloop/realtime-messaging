@@ -41,7 +41,7 @@ export function useChat({ room, alias }) {
   useEffect(() => {
     if (isConnected || error !== null) return;
 
-    const {disconnect, connectionStatus} = simplifiedConnect(handleNewMessage, setPostMessage, room, alias, setError);
+    const {disconnect, connectionStatus} = simplifiedConnect(handleNewMessage, sendMessage, room, alias, setError);
 
     setIsConnected(connectionStatus)
 
@@ -60,6 +60,10 @@ export function useChat({ room, alias }) {
         message
       ]
     })
+  }
+
+  function sendMessage(callback) {
+    setPostMessage(() => callback)
   }
 
   return {
@@ -83,20 +87,19 @@ function decodeMessage(message) {
  * - a way to post new messages
  * - the status of the connection
  * 
- * @param {(message: ChatMessage) => void} newMessageHandler 
- * @param {*} setPostMessage 
+ * @param {(message: string) => void} newMessageHandler  
  * @param {*} setError 
  * @param {string} room 
  * @param {string} alias 
+ * @param {null | (message: string) => void} sendMessage 
  * 
  * @returns {{
  *  disconnect: () => void
  *  error: any
- *  postmessage: (message: ChatMessage) => void
  *  connectionStatus: boolean
  * }}
  */
-function simplifiedConnect(newMessageHandler, setPostMessage, room, alias, setError) {
+function simplifiedConnect(newMessageHandler, sendMessage, room, alias, setError) {
   let this_connection;
 
   function messageCallback(error, message) {
@@ -117,8 +120,8 @@ function simplifiedConnect(newMessageHandler, setPostMessage, room, alias, setEr
         callback: messageCallback,
       });
 
-      setPostMessage(
-        () => (message) => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
+      sendMessage(
+        message => this_connection.publish(room, messageBrooker.formatMessage(message, alias))
       );
     },
     (error) => setError(error)
@@ -126,7 +129,7 @@ function simplifiedConnect(newMessageHandler, setPostMessage, room, alias, setEr
 
   return {
     disconnect: () => {this_connection.close().catch((error) => console.error(error));},
-    connectionStatus: this_connection ? true : false
+    connectionStatus: this_connection ? true : false,
   }
 }
 
