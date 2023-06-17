@@ -50,9 +50,11 @@ export function useChat({ room, alias }) {
   }, [room, alias]);
 
   // Event handlers
+  /**
+   * Updates messages with incomming ones
+   */
   function handleNewMessage(error, message) {
     setError(error)
-
     
     setMessages((oldMessages) => {
       return [
@@ -62,6 +64,9 @@ export function useChat({ room, alias }) {
     })
   }
 
+  /**
+   * Sets the post message function
+   */
   function sendMessage(callback) {
     setPostMessage(() => callback)
   }
