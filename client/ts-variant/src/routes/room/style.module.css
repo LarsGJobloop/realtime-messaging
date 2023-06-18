@@ -1,0 +1,22 @@
+.room-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation {
+  display: flex;
+
+  padding-left: var(--spacing-1);
+  background-color: var(--color-primary-600);
+  color: var(--color-gray-200);
+}
+
+.navigation > * > a {
+  display: block;
+
+  background-color: var(--color-secondary-800);
+  padding: var(--spacing-1) var(--spacing-4);
+  border-radius: 10px;
+
+  margin: var(--spacing-1) 0px;
+}
