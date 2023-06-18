@@ -36,4 +36,10 @@ export const mockList: ChatRoom[] = [
     postMessage: (message: ChatMessage) => mockPost(message),
     onMessage: mockNewMessage,
   },
+  {
+    name: "bastards-barracks",
+    isConnected: false,
+    postMessage: (message: ChatMessage) => mockPost(message),
+    onMessage: mockNewMessage,
+  },
 ];
