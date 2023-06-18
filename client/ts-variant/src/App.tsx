@@ -5,6 +5,9 @@ import {
   Navigate,
 } from "react-router-dom";
 
+// Contexts
+import { ConnectionContextProvider } from "./contexts/ConnectionContext";
+
 // Routes
 import { Lobby } from "./routes";
 import { AddRoom } from "./routes/addRoom";
@@ -12,7 +15,7 @@ import { Admin } from "./routes/admin";
 import { Login } from "./routes/login";
 import { RoomLayout } from "./routes/room";
 import { Room } from "./routes/room/:roomID";
-import { ConnectionContextProvider } from "./contexts/ConnectionContext";
+
 export default function App() {
   return (
     <ConnectionContextProvider>
