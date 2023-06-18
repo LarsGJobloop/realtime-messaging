@@ -1,11 +1,12 @@
-export type ChatServerRequest<T = true> = Promise<RequestSuccess<T> | RequestError>;
+export type ChatServerRequest<T = true> = Promise<
+  RequestSuccess<T> | RequestError
+>;
 export type RequestSuccess<T = true> = { success: T; error?: ErrorContainer };
 export type RequestError = { success: false; error: ErrorContainer };
 
 export type RoomName = string;
 export type ServerID = string;
 export type ServerURL = `ws://${string}:${number}`;
-
 
 export interface ChatRoom {
   name: RoomName;

@@ -1,9 +1,9 @@
-import style from "./style.module.css"
+import style from "./style.module.css";
 
 export function Room() {
-  return(
+  return (
     <div className={style["Room"]}>
       <h1>Room</h1>
     </div>
-  )
+  );
 }

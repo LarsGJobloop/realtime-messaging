@@ -7,12 +7,11 @@ interface RoomCardProps {
 }
 
 export function RoomCard({ meta, onClick }: RoomCardProps) {
-
   // Event handlers
   function enterRoom() {
     if (!meta.isConnected) {
-      console.log("No connections to room")
-      return
+      console.log("No connections to room");
+      return;
     }
     onClick(meta);
   }
