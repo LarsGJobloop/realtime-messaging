@@ -4,7 +4,7 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 
 import { ChatMessage } from "../../../models/generic";
 
-import { connectionContext } from "../../../App";
+import { connectionContext } from "../../../contexts/ConnectionContext";
 
 import { Msg, NatsError, StringCodec } from "nats.ws";
 
