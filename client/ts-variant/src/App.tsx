@@ -16,12 +16,11 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Lobby />}>
-          <Route path="addRoom" element={<AddRoom />} />
-          <Route path="admin" element={<Admin />} />
-          <Route path="login" element={<Login />} />
-          <Route path="room" element={<Room />} />
-        </Route>
+        <Route path="/" element={<Lobby />} />
+        <Route path="/addRoom" element={<AddRoom />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/room" element={<Room />} />
 
         {/* Redirect invalid links to the landing page */}
         <Route path="*" element={<Navigate to="/" replace />} />
