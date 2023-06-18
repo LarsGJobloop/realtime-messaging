@@ -5,10 +5,14 @@
 
 .navigation {
   display: flex;
+  align-items: center;
 
   padding-left: var(--spacing-1);
   background-color: var(--color-primary-600);
   color: var(--color-gray-200);
+
+  --navbar-height: 9vh;
+  height: var(--navbar-height);
 }
 
 .navigation > * > a {

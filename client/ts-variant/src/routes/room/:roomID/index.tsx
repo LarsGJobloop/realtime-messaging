@@ -11,12 +11,12 @@ export function Room() {
   const { messages, sendMessage } = useChatRoom({ roomID });
 
   return (
-    <div className={style["Room"]}>
-      <header>
+    <div className={style["room"]}>
+      <header className={style["room-header"]}>
         <h1>{roomID}</h1>
       </header>
 
-      <main>
+      <main className={style["feed-container"]}>
         <ChatFeed messages={messages} />
       </main>
 

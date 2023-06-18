@@ -1,0 +1,16 @@
+.room {
+  display: grid;
+  grid-template-rows: 1fr 12fr 1fr;
+  height: calc(100vh - 9vh);
+  height: calc(100svh - 9svh);
+}
+
+.room-header {
+  display: flex;
+  justify-content: center;
+}
+
+.feed-container {
+  margin-left: auto;
+  margin-right: auto;
+}
