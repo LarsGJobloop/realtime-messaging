@@ -29,11 +29,11 @@ export function Lobby() {
       </header>
 
       <main className={style["main"]}>
-        <ul>
+        <ul className={style["rooms"]}>
           {rooms.map((room) => {
             return (
               <li key={room.id}>
-                <Link to={`/room/${room.id}`}>{room.name}</Link>
+                <RoomCard room={room}/>
               </li>
             );
           })}
@@ -41,4 +41,16 @@ export function Lobby() {
       </main>
     </div>
   );
+}
+
+interface RoomCardProps {
+  room: ChatRoom
+}
+
+function RoomCard({room}: RoomCardProps) {
+  return (
+    <Link className={style["RoomCard"]} to={`/room/${room.id}`}>
+      <h2>{room.name}</h2>
+    </Link>
+  )
 }
