@@ -1,13 +1,15 @@
 import style from "./style.module.css";
+
 import { useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import { ChatMessage } from "../../../models/generic";
 
 import { connectionContext } from "../../../contexts/ConnectionContext";
-
 import { Msg, NatsError, StringCodec } from "nats.ws";
+
 import { ChatInput } from "../../../components/ChatInput/ChatInput";
+import { ChatFeed } from "../../../components/ChatFeed/ChatFeed";
 
 const codec = StringCodec();
 
@@ -49,26 +51,10 @@ export function Room() {
       </header>
 
       <main>
-        <ul>
-          {messages.map((message) => {
-            return (
-              <li key={message.id}>
-                <MessageFeedCard message={message} />
-              </li>
-            );
-          })}
-        </ul>
+        <ChatFeed messages={messages} />
       </main>
 
       <ChatInput sendMessage={sendMessage} />
     </div>
   );
-}
-
-interface MessageFeedCardProps {
-  message: ChatMessage;
-}
-
-function MessageFeedCard({ message }: MessageFeedCardProps) {
-  return <div>{message.body}</div>;
 }
