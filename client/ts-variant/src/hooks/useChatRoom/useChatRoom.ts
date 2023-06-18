@@ -5,15 +5,15 @@ import { ChatMessage } from "../../models/generic";
 
 const codec = StringCodec();
 
+type SendMessage = ((message: ChatMessage) => void) | null;
+
 interface IuseChatRoom {
   roomID: string | undefined;
 }
 
 export function useChatRoom({ roomID }: IuseChatRoom) {
   const connection = useContext(connectionContext);
-  const [sendMessage, setSendMessage] = useState<
-    ((message: ChatMessage) => void) | null
-  >(null);
+  const [sendMessage, setSendMessage] = useState<SendMessage>(null);
   const [messages, updateMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
