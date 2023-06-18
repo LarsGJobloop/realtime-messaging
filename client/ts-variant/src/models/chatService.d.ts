@@ -4,6 +4,8 @@ export type RequestError = { success: false; error: ErrorContainer };
 
 export type RoomName = string;
 export type ServerID = string;
+export type ServerURL = `ws://${string}:${number}`;
+
 
 export interface ChatRoom {
   name: RoomName;
