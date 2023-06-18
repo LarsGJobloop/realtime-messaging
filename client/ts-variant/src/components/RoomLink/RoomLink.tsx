@@ -1,16 +1,10 @@
-import { Link } from "react-router-dom"
-import { ChatRoom } from "../../models/chatService"
+import { Link } from "react-router-dom";
+import { ChatRoom } from "../../models/chatService";
 
 interface RoomLinkProps {
-  room: ChatRoom
+  room: ChatRoom;
 }
 
-export function RoomLink({
-  room
-}: RoomLinkProps) {
-  return (
-    <Link to={`room/${room.id}`}>
-      {room.name}
-    </Link>
-  )
+export function RoomLink({ room }: RoomLinkProps) {
+  return <Link to={`room/${room.id}`}>{room.name}</Link>;
 }

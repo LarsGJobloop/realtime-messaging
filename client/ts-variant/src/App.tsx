@@ -14,7 +14,6 @@ import { RoomLayout } from "./routes/room";
 import { Room } from "./routes/room/:roomID";
 import { ConnectionContextProvider } from "./contexts/ConnectionContext";
 export default function App() {
-
   return (
     <ConnectionContextProvider>
       <Router>
@@ -24,7 +23,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
 
-          <Route path="/room" element={<RoomLayout />} >
+          <Route path="/room" element={<RoomLayout />}>
             <Route path=":roomID" element={<Room />} />
           </Route>
 

@@ -8,52 +8,58 @@ import { connectionContext } from "../../../contexts/ConnectionContext";
 
 import { Msg, NatsError, StringCodec } from "nats.ws";
 
-const codec = StringCodec()
+const codec = StringCodec();
 
 export function Room() {
-  const { roomID } = useParams()
-  const connection = useContext(connectionContext)
+  const { roomID } = useParams();
+  const connection = useContext(connectionContext);
 
-  const [messages, updateMessages ] = useState<ChatMessage[]>([])
-  const [ formContent, setFormContent ] = useState("")
-  const [ sendMessage, setSendMessage ] = useState<((message: ChatMessage) => void) | null>(null)
+  const [messages, updateMessages] = useState<ChatMessage[]>([]);
+  const [formContent, setFormContent] = useState("");
+  const [sendMessage, setSendMessage] = useState<
+    ((message: ChatMessage) => void) | null
+  >(null);
 
   useEffect(() => {
     if (!roomID || !connection) return;
 
-    const subscription = connection.subscribe(roomID,{callback: handleNewMessage})
-    setSendMessage(() => (message: ChatMessage) => connection.publish(roomID, codec.encode(JSON.stringify(message))))
+    const subscription = connection.subscribe(roomID, {
+      callback: handleNewMessage,
+    });
+    setSendMessage(
+      () => (message: ChatMessage) =>
+        connection.publish(roomID, codec.encode(JSON.stringify(message)))
+    );
 
-
-    return () => subscription.unsubscribe()
-  }, [roomID])
+    return () => subscription.unsubscribe();
+  }, [roomID]);
 
   function handleNewMessage(error: NatsError | null, message: Msg) {
-    if(error) return
+    if (error) return;
 
-    const newMessage = message.json() as ChatMessage
+    const newMessage = message.json() as ChatMessage;
 
-    updateMessages(currentMessages => [...currentMessages, newMessage])
+    updateMessages((currentMessages) => [...currentMessages, newMessage]);
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (sendMessage === null) return
+    event.preventDefault();
+    if (sendMessage === null) return;
 
-    const currentTime = Date.now()
+    const currentTime = Date.now();
 
     sendMessage({
-      author: {alias: "Me", id: "larsien"},
+      author: { alias: "Me", id: "larsien" },
       body: formContent,
       createdAt: new Date(currentTime).toISOString(),
-      id: `${currentTime}"me"`
-    })
+      id: `${currentTime}"me"`,
+    });
 
-    setFormContent("")
+    setFormContent("");
   }
 
   function updateForm(event: React.ChangeEvent<HTMLInputElement>) {
-    setFormContent(event.target.value)
+    setFormContent(event.target.value);
   }
 
   return (
@@ -64,21 +70,25 @@ export function Room() {
 
       <main>
         <ul>
-          {
-            messages.map((message) => {
-              return (
-                <li key={message.id}>
-                  <MessageFeedCard message={message}/>
-                </li>
-              )
-            })
-          }
+          {messages.map((message) => {
+            return (
+              <li key={message.id}>
+                <MessageFeedCard message={message} />
+              </li>
+            );
+          })}
         </ul>
       </main>
 
       <footer>
         <form onSubmit={submit}>
-          <input type="text" name="" id="" onChange={updateForm} value={formContent}/>
+          <input
+            type="text"
+            name=""
+            id=""
+            onChange={updateForm}
+            value={formContent}
+          />
           <button type="submit">Send</button>
         </form>
       </footer>
@@ -87,15 +97,9 @@ export function Room() {
 }
 
 interface MessageFeedCardProps {
-  message: ChatMessage
+  message: ChatMessage;
 }
 
-function MessageFeedCard({
-  message
-}: MessageFeedCardProps) {
-  return (
-    <div>
-      {message.body}
-    </div>
-  )
+function MessageFeedCard({ message }: MessageFeedCardProps) {
+  return <div>{message.body}</div>;
 }
