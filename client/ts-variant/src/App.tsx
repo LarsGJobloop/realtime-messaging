@@ -7,16 +7,20 @@ import {
 
 // Routes
 import { Lobby } from "./routes";
+import { AddRoom } from "./routes/addRoom";
+import { Admin } from "./routes/admin";
+import { Login } from "./routes/login";
+import { Room } from "./routes/room";
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Lobby />}>
-          <Route path="login" element={<h1>Login</h1>} />
-          <Route path="room" element={<h1>Room</h1>} />
-          <Route path="addRoom" element={<h1>Add new Room</h1>} />
-          <Route path="admin" element={<h1>Admin Page</h1>} />
+          <Route path="addRoom" element={<AddRoom />} />
+          <Route path="admin" element={<Admin />} />
+          <Route path="login" element={<Login />} />
+          <Route path="room" element={<Room />} />
         </Route>
 
         {/* Redirect invalid links to the landing page */}
