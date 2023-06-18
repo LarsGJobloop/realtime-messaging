@@ -6,11 +6,11 @@ import { ChatMessage } from "../../models/generic";
 const codec = StringCodec();
 
 interface IuseChatRoom {
-  roomID: string | undefined,
-  onNewMessage: (error: NatsError | null, message: Msg) => void
+  roomID: string | undefined;
+  onNewMessage: (error: NatsError | null, message: Msg) => void;
 }
 
-export function useChatRoom({roomID, onNewMessage}: IuseChatRoom) {
+export function useChatRoom({ roomID, onNewMessage }: IuseChatRoom) {
   const connection = useContext(connectionContext);
   const [sendMessage, setSendMessage] = useState<
     ((message: ChatMessage) => void) | null
@@ -22,7 +22,7 @@ export function useChatRoom({roomID, onNewMessage}: IuseChatRoom) {
     const subscription = connection.subscribe(roomID, {
       callback: onNewMessage,
     });
-    
+
     setSendMessage(
       () => (message: ChatMessage) =>
         connection.publish(roomID, codec.encode(JSON.stringify(message)))
@@ -33,5 +33,5 @@ export function useChatRoom({roomID, onNewMessage}: IuseChatRoom) {
 
   return {
     sendMessage,
-  }
+  };
 }
