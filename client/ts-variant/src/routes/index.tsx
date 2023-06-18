@@ -1,8 +1,8 @@
-import style from "./style.module.css"
+import style from "./style.module.css";
 
-import { ToAdmin } from "../components/ToAdmin/ToAdmin"
-import { ToAddRoom } from "../components/ToAddRoom/ToAddRoom"
-import { RoomList } from "../components/RoomList/RoomList"
+import { ToAdmin } from "../components/ToAdmin/ToAdmin";
+import { ToAddRoom } from "../components/ToAddRoom/ToAddRoom";
+import { RoomList } from "../components/RoomList/RoomList";
 
 /**
  * This is the default landing page
@@ -19,5 +19,5 @@ export function Lobby() {
         <RoomList />
       </main>
     </div>
-  )
+  );
 }

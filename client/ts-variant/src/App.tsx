@@ -3,10 +3,10 @@ import {
   Routes,
   Route,
   Navigate,
-} from "react-router-dom"
+} from "react-router-dom";
 
 // Routes
-import { Lobby } from "./routes"
+import { Lobby } from "./routes";
 
 export default function App() {
   return (
@@ -20,8 +20,8 @@ export default function App() {
         </Route>
 
         {/* Redirect invalid links to the landing page */}
-        <Route path="*" element={<Navigate to="/" replace />}/>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
-  )
+  );
 }
