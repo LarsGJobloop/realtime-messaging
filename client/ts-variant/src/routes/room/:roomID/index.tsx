@@ -1,40 +1,20 @@
 import style from "./style.module.css";
 
 import { useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ChatMessage } from "../../../models/generic";
 
-import { connectionContext } from "../../../contexts/ConnectionContext";
-import { Msg, NatsError, StringCodec } from "nats.ws";
+import { Msg, NatsError} from "nats.ws";
 
 import { ChatInput } from "../../../components/ChatInput/ChatInput";
 import { ChatFeed } from "../../../components/ChatFeed/ChatFeed";
-
-const codec = StringCodec();
+import { useChatRoom } from "../../../hooks/useChatRoom/useChatRoom";
 
 export function Room() {
   const { roomID } = useParams();
-  const connection = useContext(connectionContext);
-
   const [messages, updateMessages] = useState<ChatMessage[]>([]);
-  const [sendMessage, setSendMessage] = useState<
-    ((message: ChatMessage) => void) | null
-  >(null);
-
-  useEffect(() => {
-    if (!roomID || !connection) return;
-
-    const subscription = connection.subscribe(roomID, {
-      callback: handleNewMessage,
-    });
-    setSendMessage(
-      () => (message: ChatMessage) =>
-        connection.publish(roomID, codec.encode(JSON.stringify(message)))
-    );
-
-    return () => subscription.unsubscribe();
-  }, [roomID]);
+  const { sendMessage } = useChatRoom({roomID, onNewMessage: handleNewMessage})
 
   function handleNewMessage(error: NatsError | null, message: Msg) {
     if (error) return;
