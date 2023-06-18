@@ -3,7 +3,7 @@ export type RequestSuccess<T = true> = { success: T; error?: ErrorContainer };
 export type RequestError = { success: false; error: ErrorContainer };
 
 export type RoomName = string;
-export type ServerName = string;
+export type ServerID = string;
 
 export interface ChatRoom {
   name: RoomName;
@@ -13,7 +13,7 @@ export interface ChatRoom {
 }
 
 export interface ChatServer {
-  name: ServerName;
+  id: ServerID;
   subscriptions: ChatRoom[];
   subscribe: (roomName: RoomName) => ChatServerRequest<ChatRoom>;
   unsubscribe: (roomName: RoomName) => void;
