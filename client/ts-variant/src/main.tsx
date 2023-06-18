@@ -5,6 +5,7 @@ import App from "./App.tsx";
 // Global CSS
 import "./styles/normalize.css";
 import "./styles/palettes.css";
+import "./styles/spacing.css"
 import "./styles/typography.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
