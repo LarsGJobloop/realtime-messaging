@@ -1,3 +1,5 @@
+import style from "./style.module.css"
+
 import { FormEvent, useState } from "react";
 import { ChatMessage } from "../../models/generic";
 
@@ -24,14 +26,14 @@ export function ChatInput({ sendMessage }: ChatInputProps) {
     setFormContent("");
   }
 
-  function updateForm(event: React.ChangeEvent<HTMLInputElement>) {
+  function updateForm(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setFormContent(event.target.value);
   }
 
   return (
-    <footer>
-      <form onSubmit={submit}>
-        <input type="text" onChange={updateForm} value={formContent} />
+    <footer className={style["container"]}>
+      <form className={style["form"]} onSubmit={submit}>
+        <textarea className={style["text"]} cols={20} rows={3} onChange={updateForm} value={formContent} />
         <button disabled={sendMessage === null} type="submit">
           Send
         </button>
