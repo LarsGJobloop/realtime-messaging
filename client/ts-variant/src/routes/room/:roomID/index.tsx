@@ -1,12 +1,13 @@
 import style from "./style.module.css";
 import { useParams } from "react-router-dom";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { ChatMessage } from "../../../models/generic";
 
 import { connectionContext } from "../../../contexts/ConnectionContext";
 
 import { Msg, NatsError, StringCodec } from "nats.ws";
+import { ChatInput } from "../../../components/ChatInput/ChatInput";
 
 const codec = StringCodec();
 
@@ -15,7 +16,6 @@ export function Room() {
   const connection = useContext(connectionContext);
 
   const [messages, updateMessages] = useState<ChatMessage[]>([]);
-  const [formContent, setFormContent] = useState("");
   const [sendMessage, setSendMessage] = useState<
     ((message: ChatMessage) => void) | null
   >(null);
@@ -42,26 +42,6 @@ export function Room() {
     updateMessages((currentMessages) => [...currentMessages, newMessage]);
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (sendMessage === null) return;
-
-    const currentTime = Date.now();
-
-    sendMessage({
-      author: { alias: "Me", id: "larsien" },
-      body: formContent,
-      createdAt: new Date(currentTime).toISOString(),
-      id: `${currentTime}"me"`,
-    });
-
-    setFormContent("");
-  }
-
-  function updateForm(event: React.ChangeEvent<HTMLInputElement>) {
-    setFormContent(event.target.value);
-  }
-
   return (
     <div className={style["Room"]}>
       <header>
@@ -80,18 +60,7 @@ export function Room() {
         </ul>
       </main>
 
-      <footer>
-        <form onSubmit={submit}>
-          <input
-            type="text"
-            name=""
-            id=""
-            onChange={updateForm}
-            value={formContent}
-          />
-          <button type="submit">Send</button>
-        </form>
-      </footer>
+      <ChatInput sendMessage={sendMessage} />
     </div>
   );
 }
