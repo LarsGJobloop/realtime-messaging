@@ -21,6 +21,7 @@ export interface ChatServer {
 
 export interface ChatService {
   isConnected: boolean;
+  serverList: ChatServer[];
   connect: () => ChatServerRequest<ChatServer>;
   disconnect: () => void;
 }
