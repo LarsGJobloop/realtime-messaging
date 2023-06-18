@@ -7,20 +7,20 @@ const codec = StringCodec();
 
 interface IuseChatRoom {
   roomID: string | undefined;
-  onNewMessage: (error: NatsError | null, message: Msg) => void;
 }
 
-export function useChatRoom({ roomID, onNewMessage }: IuseChatRoom) {
+export function useChatRoom({ roomID }: IuseChatRoom) {
   const connection = useContext(connectionContext);
   const [sendMessage, setSendMessage] = useState<
     ((message: ChatMessage) => void) | null
   >(null);
+  const [messages, updateMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     if (!roomID || !connection) return;
 
     const subscription = connection.subscribe(roomID, {
-      callback: onNewMessage,
+      callback: handleNewMessage,
     });
 
     setSendMessage(
@@ -31,7 +31,16 @@ export function useChatRoom({ roomID, onNewMessage }: IuseChatRoom) {
     return () => subscription.unsubscribe();
   }, [roomID]);
 
+  function handleNewMessage(error: NatsError | null, message: Msg) {
+    if (error) return;
+
+    const newMessage = message.json() as ChatMessage;
+
+    updateMessages((currentMessages) => [...currentMessages, newMessage]);
+  }
+
   return {
     sendMessage,
+    messages,
   };
 }
