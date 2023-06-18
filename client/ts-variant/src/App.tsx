@@ -12,19 +12,11 @@ import { Admin } from "./routes/admin";
 import { Login } from "./routes/login";
 import { RoomLayout } from "./routes/room";
 import { Room } from "./routes/room/:roomID";
-import { createContext, useEffect, useState } from "react";
-import { NatsConnection } from "nats.ws";
-import { connect } from "./utilities/server";
-
-export const connectionContext = createContext<NatsConnection | null>(null)
-
+import { ConnectionContextProvider } from "./contexts/ConnectionContext";
 export default function App() {
-  const [connection, setConnection] = useState<NatsConnection | null>(null)
-
-  useEffect(() => {connect().then(setConnection)}, [])
 
   return (
-    <connectionContext.Provider value={connection}>
+    <ConnectionContextProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Lobby />} />
@@ -40,6 +32,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-    </connectionContext.Provider>
+    </ConnectionContextProvider>
   );
 }
