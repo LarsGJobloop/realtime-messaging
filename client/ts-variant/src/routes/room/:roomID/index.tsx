@@ -1,8 +1,11 @@
-import { useParams } from "react-router-dom";
 import style from "./style.module.css";
+import { useParams } from "react-router-dom";
 import { FormEvent, useContext, useEffect, useState } from "react";
+
 import { ChatMessage } from "../../../models/generic";
+
 import { connectionContext } from "../../../App";
+
 import { Msg, NatsError, StringCodec } from "nats.ws";
 
 const codec = StringCodec()
@@ -74,12 +77,10 @@ export function Room() {
       </main>
 
       <footer>
-        {
-          <form onSubmit={submit}>
-            <input type="text" name="" id="" onChange={updateForm} value={formContent}/>
-            <button type="submit">Send</button>
-          </form>
-        }
+        <form onSubmit={submit}>
+          <input type="text" name="" id="" onChange={updateForm} value={formContent}/>
+          <button type="submit">Send</button>
+        </form>
       </footer>
     </div>
   );
