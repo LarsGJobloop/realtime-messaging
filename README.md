@@ -10,6 +10,17 @@
 
 R Mess aims to be a realtime messaging application learning experience.
 
+## Architecture
+
+![Architecture Diagram](./docs/architecture.png)
+
+- Static File Server
+  Delivers the Application files to the client, along with brooker adress
+- Application
+  Frontend application for interacting with the chat room and connecting to the...
+- Message Brooker
+  Responsible for accepting new subscriptions and publishing messages to subscribers
+
 ## Goal
 
 - Frontend
