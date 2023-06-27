@@ -1,0 +1,25 @@
+# version is now using "compose spec"
+# v2 and v3 are now combined!
+# docker-compose v1.27+ required
+
+services:
+  client:
+    build: ./client
+    ports:
+      - "5000:80"
+    networks:
+      - chat-rooms
+
+  brooker:
+    build: ./message-brooker
+    ports:
+      - 4222:4222
+      - 9090:9090
+      - 6222:6222
+    volumes:
+      - "./message-brooker/nats-server.conf:/nats-server.conf"
+    networks:
+      - chat-rooms
+
+networks:
+  chat-rooms:
